@@ -1,6 +1,8 @@
 package com.abbas.securityservice.config;
 
+import com.abbas.securityservice.dao.Token;
 import com.abbas.securityservice.repository.TokenRepository;
+import com.abbas.securityservice.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -28,28 +31,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-            final String authHeader= request.getHeader("Authorization");
-            final String jwt;
-            final String userEmail;
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-        jwt = authHeader.substring(7);
-            userEmail = this.jwtService.extractUsername(jwt);
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                var isTokenValid = tokenRepository.findByToken(jwt)
-                        .map(token -> !token.isExpired() && !token.isRevoked())
-                        .orElse(false);
-                if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                         userDetails, null, userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String userEmail;
+        final String tokenId;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
+            return;
+        }
+        jwt = authHeader.substring(7);
+        tokenId = this.jwtService.extractId(jwt);
+        Optional<Token> possibilityToken = tokenRepository.findById(tokenId);
+        if (possibilityToken.isPresent()) {
+            throw new RuntimeException();
+        }
+        userEmail = this.jwtService.extractUsername(jwt);
+//        String keyUser = "auth_token:" + userEmail;
+//        var keyUserEmail = redisTemplate.keys(keyUser).stream().findFirst();
+//        if (keyUserEmail.isPresent()) {
+//            throw new RuntimeException();
+//        }
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        filterChain.doFilter(request, response);
     }
 }

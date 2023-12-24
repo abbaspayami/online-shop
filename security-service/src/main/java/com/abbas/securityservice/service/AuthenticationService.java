@@ -1,14 +1,12 @@
 package com.abbas.securityservice.service;
 
-import com.abbas.securityservice.config.JwtService;
-import com.abbas.securityservice.dto.AuthenticationResponse;
-import com.abbas.securityservice.dto.AuthenticateRequest;
-import com.abbas.securityservice.dto.signUpRequest;
 import com.abbas.securityservice.dao.Role;
-import com.abbas.securityservice.dao.Token;
-import com.abbas.securityservice.dao.TokenType;
 import com.abbas.securityservice.dao.User;
-import com.abbas.securityservice.repository.TokenRepository;
+import com.abbas.securityservice.dao.UserHistory;
+import com.abbas.securityservice.dto.AuthenticateRequest;
+import com.abbas.securityservice.dto.AuthenticationResponse;
+import com.abbas.securityservice.dto.signUpRequest;
+import com.abbas.securityservice.repository.UserHistoryRepository;
 import com.abbas.securityservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +21,10 @@ import java.util.List;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final UserHistoryRepository userHistoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
-    private final TokenRepository tokenRepository;
 
     public AuthenticationResponse signup(signUpRequest request) {
         var user = User.builder()
@@ -38,32 +36,30 @@ public class AuthenticationService {
                 .build();
         User savedToken = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        saveUserToken(savedToken, jwtToken);
+        saveUserHistory(savedToken, jwtService.extractId(jwtToken));
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
+    private void saveUserHistory(User user, String jwtToken) {
+        var token = UserHistory.builder()
                 .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.Berear)
-                .expired(false)
+                .tokenId(jwtToken)
                 .revoked(false)
                 .build();
-        tokenRepository.save(token);
+        userHistoryRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
-        List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(t -> {
+    public boolean revokeAllUserTokens(String userEmail) {
+        List<UserHistory> allValidTokensByUser = userHistoryRepository.findAllValidTokensByUser(userEmail);
+        if (allValidTokensByUser.isEmpty())
+            return false;
+        allValidTokensByUser.forEach(t -> {
             t.setRevoked(true);
-            t.setExpired(true);
         });
-        tokenRepository.saveAll(validUserTokens);
+        userHistoryRepository.saveAll(allValidTokensByUser);
+        return true;
     }
 
     public AuthenticationResponse authenticate(AuthenticateRequest request) {
@@ -76,8 +72,8 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+        revokeAllUserTokens(user.getEmail());
+        saveUserHistory(user, jwtService.extractId(jwtToken));
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
