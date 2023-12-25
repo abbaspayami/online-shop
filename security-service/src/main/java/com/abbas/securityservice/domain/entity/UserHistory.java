@@ -1,4 +1,4 @@
-package com.abbas.securityservice.dao;
+package com.abbas.securityservice.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

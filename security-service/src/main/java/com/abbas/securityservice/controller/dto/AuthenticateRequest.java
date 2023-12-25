@@ -1,4 +1,4 @@
-package com.abbas.securityservice.dto;
+package com.abbas.securityservice.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class signUpRequest {
+public class AuthenticateRequest {
 
-    private String firstname;
-    private String lastname;
     private String email;
+
     private String password;
 
 }

@@ -1,6 +1,6 @@
 package com.abbas.securityservice.config;
 
-import com.abbas.securityservice.dao.Token;
+import com.abbas.securityservice.domain.entity.Token;
 import com.abbas.securityservice.repository.TokenRepository;
 import com.abbas.securityservice.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilterConfig extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
@@ -46,11 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new RuntimeException();
         }
         userEmail = this.jwtService.extractUsername(jwt);
-//        String keyUser = "auth_token:" + userEmail;
-//        var keyUserEmail = redisTemplate.keys(keyUser).stream().findFirst();
-//        if (keyUserEmail.isPresent()) {
-//            throw new RuntimeException();
-//        }
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {

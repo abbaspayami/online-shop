@@ -1,5 +1,6 @@
-package com.abbas.securityservice.dao;
+package com.abbas.securityservice.domain.entity;
 
+import com.abbas.securityservice.domain.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,11 @@
-package com.abbas.securityservice.service;
+package com.abbas.securityservice.service.impl;
 
-import com.abbas.securityservice.dao.Token;
-import com.abbas.securityservice.dao.UserHistory;
+
+import com.abbas.securityservice.domain.entity.Token;
+import com.abbas.securityservice.domain.entity.UserHistory;
 import com.abbas.securityservice.repository.TokenRepository;
 import com.abbas.securityservice.repository.UserHistoryRepository;
+import com.abbas.securityservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,5 @@ public class LogoutService implements LogoutHandler {
         token.setTtl(timeToExpiration);
         tokenRepository.save(token);
 
-//        redisTemplate.opsForValue().set(key, key, timeToExpiration);
     }
 }

@@ -1,6 +1,6 @@
 package com.abbas.securityservice.repository;
 
-import com.abbas.securityservice.dao.UserHistory;
+import com.abbas.securityservice.domain.entity.UserHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,11 +1,12 @@
 package com.abbas.securityservice.service;
 
-import com.abbas.securityservice.dao.Role;
-import com.abbas.securityservice.dao.User;
-import com.abbas.securityservice.dao.UserHistory;
-import com.abbas.securityservice.dto.AuthenticateRequest;
-import com.abbas.securityservice.dto.AuthenticationResponse;
-import com.abbas.securityservice.dto.signUpRequest;
+
+import com.abbas.securityservice.controller.dto.AuthenticateRequest;
+import com.abbas.securityservice.controller.dto.AuthenticationResponse;
+import com.abbas.securityservice.controller.dto.signUpRequest;
+import com.abbas.securityservice.domain.Role;
+import com.abbas.securityservice.domain.entity.User;
+import com.abbas.securityservice.domain.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
 import com.abbas.securityservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class AuthenticationService {
                 .lastName(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(request.getRole())
                 .build();
         User savedToken = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

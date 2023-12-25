@@ -1,11 +1,10 @@
 package com.abbas.securityservice.controller;
 
-import com.abbas.securityservice.dto.AuthenticateRequest;
-import com.abbas.securityservice.dto.AuthenticationResponse;
-import com.abbas.securityservice.dto.UserRevokeRequest;
-import com.abbas.securityservice.dto.signUpRequest;
+import com.abbas.securityservice.controller.dto.AuthenticateRequest;
+import com.abbas.securityservice.controller.dto.AuthenticationResponse;
+import com.abbas.securityservice.controller.dto.UserRevokeRequest;
+import com.abbas.securityservice.controller.dto.signUpRequest;
 import com.abbas.securityservice.service.AuthenticationService;
-import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

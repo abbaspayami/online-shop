@@ -1,4 +1,4 @@
-package com.abbas.securityservice.dao;
+package com.abbas.securityservice.domain;
 
 public enum Role {
 

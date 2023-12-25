@@ -1,6 +1,8 @@
 package com.abbas.securityservice.repository;
 
-import com.abbas.securityservice.dao.User;
+
+
+import com.abbas.securityservice.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

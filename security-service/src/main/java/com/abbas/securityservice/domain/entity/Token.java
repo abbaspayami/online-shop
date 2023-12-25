@@ -1,4 +1,4 @@
-package com.abbas.securityservice.dao;
+package com.abbas.securityservice.domain.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
