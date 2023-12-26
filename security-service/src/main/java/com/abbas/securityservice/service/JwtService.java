@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,13 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KET = "25f49b1811a759459183f5f21afc04627e694462104b62f3e7b422fb4ad78926";
+    @Getter
+    @Value("${secret.key}")
+    private String secretKey;
 
+    @Getter
+    @Value("${token.time}")
+    private String tokenTime;
     public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
@@ -56,7 +63,7 @@ public class JwtService {
                 .setId(UUID.randomUUID().toString())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 3))
+                .setExpiration(new Date(System.currentTimeMillis() + getTokenTime()))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -71,7 +78,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyByte = Decoders.BASE64.decode(SECRET_KET);
+        byte[] keyByte = Decoders.BASE64.decode(getSecretKey());
         return Keys.hmacShaKeyFor(keyByte);
     }
 

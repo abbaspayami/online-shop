@@ -4,6 +4,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_ZONE:http://localhost:8761/eureka/}
+secret:
+  key: "25f49b1811a759459183f5f21afc04627e694462104b62f3e7b422fb4ad78926"
+token:
+  time: 1000 * 60 * 3
 spring:
   application:
     name: security-service

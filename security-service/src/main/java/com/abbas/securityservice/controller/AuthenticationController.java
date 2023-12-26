@@ -1,6 +1,6 @@
 package com.abbas.securityservice.controller;
 
-import com.abbas.securityservice.controller.dto.AuthenticateRequest;
+import com.abbas.securityservice.controller.dto.AuthenticationRequest;
 import com.abbas.securityservice.controller.dto.AuthenticationResponse;
 import com.abbas.securityservice.controller.dto.UserRevokeRequest;
 import com.abbas.securityservice.controller.dto.signUpRequest;
@@ -23,7 +23,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticateRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 

@@ -1,10 +1,9 @@
 package com.abbas.securityservice.service;
 
 
-import com.abbas.securityservice.controller.dto.AuthenticateRequest;
+import com.abbas.securityservice.controller.dto.AuthenticationRequest;
 import com.abbas.securityservice.controller.dto.AuthenticationResponse;
 import com.abbas.securityservice.controller.dto.signUpRequest;
-import com.abbas.securityservice.domain.Role;
 import com.abbas.securityservice.domain.entity.User;
 import com.abbas.securityservice.domain.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
@@ -63,7 +62,7 @@ public class AuthenticationService {
         return true;
     }
 
-    public AuthenticationResponse authenticate(AuthenticateRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
