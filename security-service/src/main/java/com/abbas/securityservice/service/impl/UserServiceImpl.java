@@ -1,50 +1,64 @@
 package com.abbas.securityservice.service.impl;
 
+import com.abbas.securityservice.controller.dto.UserDto;
 import com.abbas.securityservice.domain.entity.User;
 import com.abbas.securityservice.exception.NotFoundException;
+import com.abbas.securityservice.mapper.UserMapper;
 import com.abbas.securityservice.repository.UserRepository;
+import com.abbas.securityservice.service.AuthenticationService;
 import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AuthenticationService authService;
+    private final UserMapper userMapper;
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        List<User> userList = userRepository.findAll();
+        List<UserDto> userDtoList = null;
+        for (User user: userList) {
+         userDtoList.add(userMapper.modelToDto(user));
+        }
+        return userDtoList;
     }
 
     @Override
-    public User getUserById(Integer id) {
+    public UserDto getUserById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user is not present."));
-        return user;
+        return userMapper.modelToDto(user);
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
-        return Optional.empty();
+    public UserDto getUserByUsername(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("user is not present."));
+        return userMapper.modelToDto(user);
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDto createUser(User user) {
+        User savedUser = userRepository.save(user);
+        return userMapper.modelToDto(savedUser);
     }
 
     @Override
-    public User updateUser(Integer id, User updatedUser) {
+    public UserDto updateUser(Integer id, User updatedUser) {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("user is not present.");
         }
         updatedUser.setId(id);
-        return userRepository.save(updatedUser);
+        User savedUser = userRepository.save(updatedUser);
+        authService.revokeAllUserTokens(updatedUser.getEmail());
+        return userMapper.modelToDto(savedUser);
     }
 
     @Override

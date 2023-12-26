@@ -1,5 +1,6 @@
 package com.abbas.securityservice.controller;
 
+import com.abbas.securityservice.controller.dto.UserDto;
 import com.abbas.securityservice.domain.entity.User;
 import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,27 +20,27 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userService.createUser(user);
+    public ResponseEntity<UserDto> createUser(@RequestBody User user) {
+        UserDto newUser = userService.createUser(user);
         return ResponseEntity.created(URI.create("/admin/users/" + newUser.getId())).body(newUser);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
-        User savedUser = userService.updateUser(id, updatedUser);
+    public ResponseEntity<UserDto> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
+        UserDto savedUser = userService.updateUser(id, updatedUser);
         return ResponseEntity.ok(savedUser);
     }
 

@@ -1,17 +1,17 @@
 package com.abbas.securityservice.service;
 
+import com.abbas.securityservice.controller.dto.UserDto;
 import com.abbas.securityservice.domain.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
-    List<User> getAllUsers();
-    User getUserById(Integer id);
-    Optional<User> getUserByUsername(String username);
-    User createUser(User user);
-    User updateUser(Integer id, User updatedUser);
+    List<UserDto> getAllUsers();
+    UserDto getUserById(Integer id);
+    UserDto getUserByUsername(String email);
+    UserDto createUser(User user);
+    UserDto updateUser(Integer id, User updatedUser);
     void deleteUser(Integer id);
 
 }
