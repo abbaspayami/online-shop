@@ -1,6 +1,6 @@
 package com.abbas.securityservice.service.impl;
 
-import com.abbas.securityservice.controller.dto.UserDto;
+import com.abbas.securityservice.controller.dto.UserResponseDto;
 import com.abbas.securityservice.domain.entity.User;
 import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.mapper.UserMapper;
@@ -20,37 +20,37 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         List<User> userList = userRepository.findAll();
-        List<UserDto> userDtoList = null;
+        List<UserResponseDto> userResponseDtoList = null;
         for (User user: userList) {
-         userDtoList.add(userMapper.modelToDto(user));
+         userResponseDtoList.add(userMapper.modelToDto(user));
         }
-        return userDtoList;
+        return userResponseDtoList;
     }
 
     @Override
-    public UserDto getUserById(Integer id) {
+    public UserResponseDto getUserById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user is not present."));
         return userMapper.modelToDto(user);
     }
 
     @Override
-    public UserDto getUserByUsername(String email) {
+    public UserResponseDto getUserByUsername(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("user is not present."));
         return userMapper.modelToDto(user);
     }
 
     @Override
-    public UserDto createUser(User user) {
+    public UserResponseDto createUser(User user) {
         User savedUser = userRepository.save(user);
         return userMapper.modelToDto(savedUser);
     }
 
     @Override
-    public UserDto updateUser(Integer id, User updatedUser) {
+    public UserResponseDto updateUser(Integer id, User updatedUser) {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("user is not present.");
         }
