@@ -5,7 +5,6 @@ import com.abbas.securityservice.domain.entity.Token;
 import com.abbas.securityservice.domain.entity.UserHistory;
 import com.abbas.securityservice.repository.TokenRepository;
 import com.abbas.securityservice.repository.UserHistoryRepository;
-import com.abbas.securityservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtServiceImpl;
     private final UserHistoryRepository userHistoryRepository;
     private final TokenRepository tokenRepository;
 
@@ -32,8 +31,8 @@ public class LogoutService implements LogoutHandler {
         }
         jwt = authHeader.substring(7);
 
-        String key = jwtService.extractId(jwt);
-        long timeToExpiration = jwtService.getTimeToExpiration(jwt);
+        String key = jwtServiceImpl.extractId(jwt);
+        long timeToExpiration = jwtServiceImpl.getTimeToExpiration(jwt);
 
         Optional<UserHistory> possibleUserHistory = userHistoryRepository.findByTokenId(key);
         if (possibleUserHistory.isEmpty()) {

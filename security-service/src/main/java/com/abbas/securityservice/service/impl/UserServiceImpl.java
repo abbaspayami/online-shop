@@ -5,7 +5,6 @@ import com.abbas.securityservice.domain.entity.User;
 import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.mapper.UserMapper;
 import com.abbas.securityservice.repository.UserRepository;
-import com.abbas.securityservice.service.AuthenticationService;
 import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final AuthenticationService authService;
+    private final AuthenticationServiceImpl authService;
     private final UserMapper userMapper;
 
     @Override

@@ -2,7 +2,7 @@ package com.abbas.securityservice.config;
 
 import com.abbas.securityservice.domain.entity.Token;
 import com.abbas.securityservice.repository.TokenRepository;
-import com.abbas.securityservice.service.JwtService;
+import com.abbas.securityservice.service.impl.JwtServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilterConfig extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtServiceImpl;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
@@ -40,15 +40,15 @@ public class JwtAuthenticationFilterConfig extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        tokenId = this.jwtService.extractId(jwt);
+        tokenId = this.jwtServiceImpl.extractId(jwt);
         Optional<Token> possibilityToken = tokenRepository.findById(tokenId);
         if (possibilityToken.isPresent()) {
             throw new RuntimeException();
         }
-        userEmail = this.jwtService.extractUsername(jwt);
+        userEmail = this.jwtServiceImpl.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtServiceImpl.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
