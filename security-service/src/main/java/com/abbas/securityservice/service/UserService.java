@@ -1,7 +1,7 @@
 package com.abbas.securityservice.service;
 
-import com.abbas.securityservice.controller.dto.UserResponseDto;
-import com.abbas.securityservice.domain.entity.User;
+import com.abbas.securityservice.dto.UserResponseDto;
+import com.abbas.securityservice.entity.User;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.abbas.securityservice.controller;
 
-import com.abbas.securityservice.controller.dto.UserRequestDto;
-import com.abbas.securityservice.controller.dto.UserResponseDto;
-import com.abbas.securityservice.domain.entity.User;
+import com.abbas.securityservice.dto.UserRequestDto;
+import com.abbas.securityservice.dto.UserResponseDto;
+import com.abbas.securityservice.entity.User;
 import com.abbas.securityservice.mapper.UserMapper;
 import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;

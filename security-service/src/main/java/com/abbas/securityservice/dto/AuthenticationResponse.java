@@ -1,4 +1,4 @@
-package com.abbas.securityservice.controller.dto;
+package com.abbas.securityservice.dto;
 
 import lombok.Builder;
 

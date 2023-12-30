@@ -1,6 +1,6 @@
 package com.abbas.securityservice.config;
 
-import com.abbas.securityservice.domain.model.ErrorMessage;
+import com.abbas.securityservice.model.ErrorMessage;
 import com.abbas.securityservice.exception.InvalidDateException;
 import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.exception.TokenHasBeenRevokedException;

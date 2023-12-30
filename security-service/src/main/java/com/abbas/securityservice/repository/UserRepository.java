@@ -2,7 +2,7 @@ package com.abbas.securityservice.repository;
 
 
 
-import com.abbas.securityservice.domain.entity.User;
+import com.abbas.securityservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

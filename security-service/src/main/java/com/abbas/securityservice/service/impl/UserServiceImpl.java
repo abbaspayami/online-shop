@@ -1,7 +1,7 @@
 package com.abbas.securityservice.service.impl;
 
-import com.abbas.securityservice.controller.dto.UserResponseDto;
-import com.abbas.securityservice.domain.entity.User;
+import com.abbas.securityservice.dto.UserResponseDto;
+import com.abbas.securityservice.entity.User;
 import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.mapper.UserMapper;
 import com.abbas.securityservice.repository.UserRepository;

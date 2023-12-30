@@ -1,6 +1,6 @@
 package com.abbas.securityservice.config;
 
-import com.abbas.securityservice.domain.entity.Token;
+import com.abbas.securityservice.entity.Token;
 import com.abbas.securityservice.repository.TokenRepository;
 import com.abbas.securityservice.service.impl.JwtServiceImpl;
 import jakarta.servlet.FilterChain;

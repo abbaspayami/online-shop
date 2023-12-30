@@ -1,4 +1,4 @@
-package com.abbas.securityservice.domain.entity;
+package com.abbas.securityservice.entity;
 
 import com.abbas.securityservice.domain.Role;
 import jakarta.persistence.*;

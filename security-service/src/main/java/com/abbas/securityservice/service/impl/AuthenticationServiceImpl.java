@@ -1,12 +1,12 @@
 package com.abbas.securityservice.service.impl;
 
 
-import com.abbas.securityservice.controller.dto.AuthenticationRequest;
-import com.abbas.securityservice.controller.dto.AuthenticationResponse;
-import com.abbas.securityservice.controller.dto.signUpRequest;
+import com.abbas.securityservice.dto.AuthenticationRequest;
+import com.abbas.securityservice.dto.AuthenticationResponse;
+import com.abbas.securityservice.dto.signUpRequest;
 import com.abbas.securityservice.domain.Role;
-import com.abbas.securityservice.domain.entity.User;
-import com.abbas.securityservice.domain.entity.UserHistory;
+import com.abbas.securityservice.entity.User;
+import com.abbas.securityservice.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
 import com.abbas.securityservice.repository.UserRepository;
 import com.abbas.securityservice.service.AuthenticationService;

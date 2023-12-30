@@ -1,8 +1,8 @@
 package com.abbas.securityservice.service.impl;
 
 
-import com.abbas.securityservice.domain.entity.Token;
-import com.abbas.securityservice.domain.entity.UserHistory;
+import com.abbas.securityservice.entity.Token;
+import com.abbas.securityservice.entity.UserHistory;
 import com.abbas.securityservice.repository.TokenRepository;
 import com.abbas.securityservice.repository.UserHistoryRepository;
 import jakarta.servlet.http.HttpServletRequest;

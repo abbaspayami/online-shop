@@ -1,4 +1,4 @@
-package com.abbas.securityservice.domain.model;
+package com.abbas.securityservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

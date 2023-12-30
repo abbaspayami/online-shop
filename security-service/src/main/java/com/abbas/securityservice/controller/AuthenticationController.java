@@ -1,9 +1,9 @@
 package com.abbas.securityservice.controller;
 
-import com.abbas.securityservice.controller.dto.AuthenticationRequest;
-import com.abbas.securityservice.controller.dto.AuthenticationResponse;
-import com.abbas.securityservice.controller.dto.UserRevokeRequest;
-import com.abbas.securityservice.controller.dto.signUpRequest;
+import com.abbas.securityservice.dto.AuthenticationRequest;
+import com.abbas.securityservice.dto.AuthenticationResponse;
+import com.abbas.securityservice.dto.UserRevokeRequest;
+import com.abbas.securityservice.dto.signUpRequest;
 import com.abbas.securityservice.service.impl.AuthenticationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -33,7 +31,7 @@ public class AuthenticationController {
 
     @PostMapping("/revokeAllUserTokens")
     public ResponseEntity<Void> revocation(@RequestBody UserRevokeRequest request) {
-        boolean success = authService.revokeAllUserTokens(request.getEmail());
+        boolean success = authService.revokeAllUserTokens(request.email());
         if (success) {
             return ResponseEntity.noContent().build();
         } else {
