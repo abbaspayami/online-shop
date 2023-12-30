@@ -1,9 +1,6 @@
 package com.abbas.securityservice.exception;
 
-public class InvalidDateException extends RuntimeException {
-
-    public InvalidDateException() {
-    }
+public class InvalidDateException extends SecurityServiceException {
 
     public InvalidDateException(String message) {
         super(message);

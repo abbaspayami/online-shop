@@ -39,7 +39,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto request) {
         User user = userMapper.dtoToModel(request);
         UserResponseDto newUser = userService.createUser(user);
-        return ResponseEntity.created(URI.create("/admin/users/" + newUser.getId())).body(newUser);
+        return ResponseEntity.created(URI.create("/admin/users/" + newUser.id())).body(newUser);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

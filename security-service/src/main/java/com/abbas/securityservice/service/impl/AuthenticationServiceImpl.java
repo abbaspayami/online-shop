@@ -4,6 +4,7 @@ package com.abbas.securityservice.service.impl;
 import com.abbas.securityservice.controller.dto.AuthenticationRequest;
 import com.abbas.securityservice.controller.dto.AuthenticationResponse;
 import com.abbas.securityservice.controller.dto.signUpRequest;
+import com.abbas.securityservice.domain.Role;
 import com.abbas.securityservice.domain.entity.User;
 import com.abbas.securityservice.domain.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
@@ -29,11 +30,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public AuthenticationResponse signup(signUpRequest request) {
         var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastName(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .firstname(request.firstname())
+                .lastname(request.lastname())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
                 .build();
         User savedToken = userRepository.save(user);
         var jwtToken = jwtServiceImpl.generateToken(user);
@@ -66,11 +67,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                        request.email(),
+                        request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.email())
                 .orElseThrow();
         var jwtToken = jwtServiceImpl.generateToken(user);
         revokeAllUserTokens(user.getEmail());

@@ -1,9 +1,6 @@
 package com.abbas.securityservice.exception;
 
-public class TokenHasBeenRevokedException extends RuntimeException {
-
-    public TokenHasBeenRevokedException() {
-    }
+public class TokenHasBeenRevokedException extends SecurityServiceException {
 
     public TokenHasBeenRevokedException(String message) {
         super(message);

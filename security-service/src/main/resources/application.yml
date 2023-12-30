@@ -7,8 +7,15 @@ eureka:
 secret:
   key: "25f49b1811a759459183f5f21afc04627e694462104b62f3e7b422fb4ad78926"
 token:
-  time: 1000 * 60 * 3
+  time: 480000
+redis:
+  host: localhost
+  port: 6379
+
 spring:
+  sql:
+    init:
+      mode: always
   application:
     name: security-service
   datasource:
@@ -17,6 +24,7 @@ spring:
     password: password
     driver-class-name: org.postgresql.Driver
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create-drop
     show-sql: true

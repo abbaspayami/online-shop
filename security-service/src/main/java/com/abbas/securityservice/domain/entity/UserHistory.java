@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class UserHistory {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String tokenId;

@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash("Token")
+@RedisHash(value = "Token",timeToLive = 15000)
 @Data
 
 public class Token {

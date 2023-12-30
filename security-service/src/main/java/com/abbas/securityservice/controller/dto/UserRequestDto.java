@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 
 public record UserRequestDto(@NotEmpty(message = "firstname is required")
                              String firstname,
-                             @NotEmpty(message = "lastName is required")
+                             @NotEmpty(message = "lastname is required")
                              String lastName,
                              @NotEmpty(message = "Email is required")
                              @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email format")

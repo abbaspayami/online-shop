@@ -6,25 +6,25 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    @Getter
     @Value("${secret.key}")
     private String secretKey;
 
-    @Getter
     @Value("${token.time}")
     private String tokenTime;
+
     public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
@@ -35,7 +35,7 @@ public class JwtServiceImpl implements JwtService {
         return extractClaim(token, Claims::getId);
     }
 
-    private  <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -54,7 +54,15 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", getRolesFromAuthorities(userDetails.getAuthorities()));
+        return generateToken(claims, userDetails);
+    }
+
+    private List<String> getRolesFromAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        return authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -64,7 +72,7 @@ public class JwtServiceImpl implements JwtService {
                 .setId(UUID.randomUUID().toString())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + getTokenTime()))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(tokenTime)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -79,7 +87,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyByte = Decoders.BASE64.decode(getSecretKey());
+        byte[] keyByte = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyByte);
     }
 
@@ -93,5 +101,6 @@ public class JwtServiceImpl implements JwtService {
             return 0; // Token is either already expired or has no expiration set
         }
     }
+
 
 }

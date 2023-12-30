@@ -9,6 +9,7 @@ import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getAllUsers() {
         List<User> userList = userRepository.findAll();
-        List<UserResponseDto> userResponseDtoList = null;
-        for (User user: userList) {
+        List<UserResponseDto> userResponseDtoList = new ArrayList<>();
+        for (User user : userList) {
          userResponseDtoList.add(userMapper.modelToDto(user));
         }
         return userResponseDtoList;
