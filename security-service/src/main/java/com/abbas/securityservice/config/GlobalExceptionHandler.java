@@ -19,12 +19,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorMessage, status);
     }
 
-    /**
-     * Handles ObjectNotFoundException
-     *
-     * @param exception catch Exception
-     * @return An ExceptionDto
-     */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessage> handleNotFound(Exception exception) {
         ErrorMessage errorMessage = ErrorMessage.build(exception.getMessage(), exception.getClass().getSimpleName());
