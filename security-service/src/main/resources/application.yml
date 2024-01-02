@@ -11,7 +11,8 @@ token:
 redis:
   host: localhost
   port: 6379
-
+inMemory:
+  store: redis
 spring:
   sql:
     init:

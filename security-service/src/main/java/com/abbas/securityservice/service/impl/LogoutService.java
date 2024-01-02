@@ -1,13 +1,13 @@
 package com.abbas.securityservice.service.impl;
 
 
-import com.abbas.securityservice.entity.Token;
 import com.abbas.securityservice.entity.UserHistory;
-import com.abbas.securityservice.repository.TokenRepository;
 import com.abbas.securityservice.repository.UserHistoryRepository;
+import com.abbas.securityservice.service.InMemoryStore;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,9 @@ public class LogoutService implements LogoutHandler {
 
     private final JwtServiceImpl jwtServiceImpl;
     private final UserHistoryRepository userHistoryRepository;
-    private final TokenRepository tokenRepository;
+
+    @Value("${inMemory.store}")
+    private String inMemoryStore;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -43,10 +45,16 @@ public class LogoutService implements LogoutHandler {
         userHistory.setRevoked(true);
         userHistoryRepository.save(userHistory);
 
-        var token = new Token();
-        token.setTokenId(userHistory.getTokenId());
-        token.setTtl(timeToExpiration);
-        tokenRepository.save(token);
+
+        if (inMemoryStore.equalsIgnoreCase("Redis")) {
+            InMemoryStore redisStore = new RedisStore();
+            StoreContextService redis = new StoreContextService(redisStore);
+            redis.processStore(userHistory.getTokenId(), timeToExpiration);
+        } else {
+            InMemoryStore memoryStore = new HashmapStore();
+            StoreContextService redis = new StoreContextService(memoryStore);
+            redis.processStore(userHistory.getTokenId(), timeToExpiration);
+        }
 
     }
 }
