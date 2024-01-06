@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class JwtServiceImpl implements JwtService {
 
     @Value("${secret.key}")
@@ -54,6 +56,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
+        log.debug("generating token");
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", getRolesFromAuthorities(userDetails.getAuthorities()));
         return generateToken(claims, userDetails);
@@ -66,6 +69,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        log.debug("generating token with extra Claims");
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

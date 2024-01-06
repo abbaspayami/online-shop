@@ -1,15 +1,16 @@
 package com.abbas.securityservice.config;
 
-import com.abbas.securityservice.model.ErrorMessage;
 import com.abbas.securityservice.exception.InvalidDateException;
 import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.exception.TokenHasBeenRevokedException;
+import com.abbas.securityservice.model.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@SuppressWarnings({"unused"})
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Throwable.class)

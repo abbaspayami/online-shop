@@ -7,6 +7,7 @@ import com.abbas.securityservice.mapper.UserMapper;
 import com.abbas.securityservice.repository.UserRepository;
 import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,14 +15,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Log4j2
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final AuthenticationServiceImpl authService;
+    private final JwtAuthenticationService authService;
     private final UserMapper userMapper;
 
     @Override
     public List<UserResponseDto> getAllUsers() {
+        log.debug("getting All Users");
         List<User> userList = userRepository.findAll();
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
         for (User user : userList) {
@@ -32,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserById(Integer id) {
+        log.debug("getting user by Id");
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user is not present."));
         return userMapper.modelToDto(user);
@@ -39,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserByUsername(String email) {
+        log.debug("getting user by username");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("user is not present."));
         return userMapper.modelToDto(user);
@@ -46,12 +51,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto createUser(User user) {
+        log.debug("creating user");
+
         User savedUser = userRepository.save(user);
         return userMapper.modelToDto(savedUser);
     }
 
     @Override
     public UserResponseDto updateUser(Integer id, User updatedUser) {
+        log.debug("updating user");
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("user is not present.");
         }
@@ -63,6 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer id) {
+        log.debug("deleting user by Id");
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("user is not present.");
         }

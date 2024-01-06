@@ -1,6 +1,6 @@
 package com.abbas.securityservice.config;
 
-public class SecurityConstants {
+public class ValidationMessageConstants {
 
     public final static String EMAIL_REQUIRED = "email is required";
     public final static String PASSWORD_REQUIRED = "password is required";

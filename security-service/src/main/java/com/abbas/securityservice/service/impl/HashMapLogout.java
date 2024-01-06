@@ -1,13 +1,12 @@
 package com.abbas.securityservice.service.impl;
 
-
 import com.abbas.securityservice.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
 import com.abbas.securityservice.service.InMemoryStore;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
@@ -16,17 +15,16 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class LogoutService implements LogoutHandler {
+@Log4j2
+public class HashMapLogout implements LogoutHandler {
 
     private final JwtServiceImpl jwtServiceImpl;
     private final UserHistoryRepository userHistoryRepository;
 
-    @Value("${inMemory.store}")
-    private String inMemoryStore;
-
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        final String authHeader= request.getHeader("Authorization");
+        log.debug("starting logout hashmap");
+        final String authHeader = request.getHeader("Authorization");
         final String jwt;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
@@ -45,16 +43,9 @@ public class LogoutService implements LogoutHandler {
         userHistory.setRevoked(true);
         userHistoryRepository.save(userHistory);
 
-
-        if (inMemoryStore.equalsIgnoreCase("Redis")) {
-            InMemoryStore redisStore = new RedisStore();
-            StoreContextService redis = new StoreContextService(redisStore);
-            redis.processStore(userHistory.getTokenId(), timeToExpiration);
-        } else {
-            InMemoryStore memoryStore = new HashmapStore();
-            StoreContextService redis = new StoreContextService(memoryStore);
-            redis.processStore(userHistory.getTokenId(), timeToExpiration);
-        }
-
+        InMemoryStore memoryStore = new HashmapStore();
+        StoreContextService hashMap = new StoreContextService(memoryStore);
+        hashMap.processStore(userHistory.getTokenId(), timeToExpiration);
+        log.debug("ending logout hashmap");
     }
 }

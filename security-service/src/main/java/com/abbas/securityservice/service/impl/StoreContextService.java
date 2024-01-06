@@ -4,7 +4,7 @@ import com.abbas.securityservice.service.InMemoryStore;
 
 public class StoreContextService {
 
-    private InMemoryStore inMemoryStore;
+    private final InMemoryStore inMemoryStore;
 
     public StoreContextService(InMemoryStore inMemoryStore) {
         this.inMemoryStore = inMemoryStore;

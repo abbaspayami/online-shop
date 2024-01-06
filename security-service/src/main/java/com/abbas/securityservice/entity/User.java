@@ -1,6 +1,6 @@
 package com.abbas.securityservice.entity;
 
-import com.abbas.securityservice.domain.Role;
+import com.abbas.securityservice.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
