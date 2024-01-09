@@ -15,6 +15,14 @@ inMemory:
   store: redis
 revocation:
   timeInterval: 60000
+# Enable all default Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#        include: health,info,metrics,env
+
 spring:
   sql:
     init:
