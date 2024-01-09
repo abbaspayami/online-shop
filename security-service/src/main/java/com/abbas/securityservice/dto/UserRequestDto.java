@@ -1,6 +1,6 @@
 package com.abbas.securityservice.dto;
 
-import com.abbas.securityservice.enums.Role;
+import com.abbas.securityservice.model.RoleEnum;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -16,6 +16,6 @@ public record UserRequestDto(@NotEmpty(message = FIRSTNAME_REQUIRED)
                              @NotEmpty(message = EMAIL_REQUIRED)
                              @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = EMAIL_REQUIRED)
                              String email,
-                             @NotNull Role role) {
+                             @NotNull RoleEnum roleEnum) {
 
 }

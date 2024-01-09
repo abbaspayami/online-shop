@@ -1,6 +1,6 @@
 package com.abbas.securityservice.entity;
 
-import com.abbas.securityservice.enums.Role;
+import com.abbas.securityservice.model.RoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,14 +32,14 @@ public class User implements UserDetails {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private RoleEnum roleEnum;
 
     @OneToMany(mappedBy = "user")
     private Set<UserHistory> userHistory;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(roleEnum.name()));
     }
 
     @Override

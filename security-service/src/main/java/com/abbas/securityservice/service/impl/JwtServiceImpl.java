@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Log4j2
+@SuppressWarnings({"unused"})
 public class JwtServiceImpl implements JwtService {
 
     @Value("${secret.key}")

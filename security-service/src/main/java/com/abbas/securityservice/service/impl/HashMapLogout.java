@@ -3,6 +3,8 @@ package com.abbas.securityservice.service.impl;
 import com.abbas.securityservice.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
 import com.abbas.securityservice.service.InMemoryStore;
+import com.abbas.securityservice.service.JwtService;
+import com.abbas.securityservice.service.StoreContextService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,9 @@ import java.util.Optional;
 @Log4j2
 public class HashMapLogout implements LogoutHandler {
 
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtService jwtServiceImpl;
     private final UserHistoryRepository userHistoryRepository;
+    private final InMemoryStore memoryStore;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -43,8 +46,7 @@ public class HashMapLogout implements LogoutHandler {
         userHistory.setRevoked(true);
         userHistoryRepository.save(userHistory);
 
-        InMemoryStore memoryStore = new HashmapStore();
-        StoreContextService hashMap = new StoreContextService(memoryStore);
+        StoreContextService hashMap = new StoreContextServiceImpl(memoryStore);
         hashMap.processStore(userHistory.getTokenId(), timeToExpiration);
         log.debug("ending logout hashmap");
     }

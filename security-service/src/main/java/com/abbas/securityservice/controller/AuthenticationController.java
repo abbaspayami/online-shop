@@ -4,7 +4,7 @@ import com.abbas.securityservice.dto.AuthenticationRequest;
 import com.abbas.securityservice.dto.AuthenticationResponse;
 import com.abbas.securityservice.dto.UserRevokeRequest;
 import com.abbas.securityservice.dto.signUpRequest;
-import com.abbas.securityservice.service.impl.JwtAuthenticationService;
+import com.abbas.securityservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @Log4j2
 public class AuthenticationController {
 
-    private final JwtAuthenticationService authService;
+    private final AuthenticationService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthenticationResponse> signup(@RequestBody @Valid signUpRequest request) {

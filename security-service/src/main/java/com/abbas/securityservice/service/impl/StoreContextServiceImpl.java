@@ -1,12 +1,15 @@
 package com.abbas.securityservice.service.impl;
 
 import com.abbas.securityservice.service.InMemoryStore;
+import com.abbas.securityservice.service.StoreContextService;
+import org.springframework.stereotype.Service;
 
-public class StoreContextService {
+@Service
+public class StoreContextServiceImpl implements StoreContextService {
 
     private final InMemoryStore inMemoryStore;
 
-    public StoreContextService(InMemoryStore inMemoryStore) {
+    public StoreContextServiceImpl(InMemoryStore inMemoryStore) {
         this.inMemoryStore = inMemoryStore;
     }
 

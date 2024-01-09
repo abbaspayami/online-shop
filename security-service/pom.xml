@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.abbas</groupId>
 	<artifactId>security-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>security-service</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

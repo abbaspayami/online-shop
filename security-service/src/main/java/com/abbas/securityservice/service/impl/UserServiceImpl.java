@@ -5,6 +5,7 @@ import com.abbas.securityservice.entity.User;
 import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.mapper.UserMapper;
 import com.abbas.securityservice.repository.UserRepository;
+import com.abbas.securityservice.service.AuthenticationService;
 import com.abbas.securityservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +20,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final JwtAuthenticationService authService;
+    private final AuthenticationService authService;
     private final UserMapper userMapper;
 
     @Override

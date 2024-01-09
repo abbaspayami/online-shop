@@ -3,22 +3,14 @@
 FROM maven:3.8.4-openjdk-17-slim AS builder
 #FROM maven:3.8.4-openjdk-17-slim
 
-WORKDIR /usr/common/src/app
-
-# Copy only the necessary files for dependency resolution
-COPY common/. .
-
-# Build the common project
-RUN mvn install -DskipTests
-
 WORKDIR /usr/src/app
 
 # Copy only the necessary files for dependency resolution
-COPY mancala-service/pom.xml .
+COPY security-service/pom.xml .
 RUN mvn dependency:go-offline
 
 # Copy the entire project and build the JAR
-COPY mancala-service/. .
+COPY security-service/. .
 RUN mvn package -DskipTests
 
 # Stage 2: Create a lightweight image with only the JAR
@@ -33,4 +25,4 @@ COPY --from=builder /usr/src/app/target/security-service-1.0.0.jar .
 EXPOSE 8080
 
 # Specify the command to run on container startup
-CMD ["java", "-jar", "security-service-0.0.1.jar"]
+CMD ["java", "-jar", "security-service-1.0.0.jar"]

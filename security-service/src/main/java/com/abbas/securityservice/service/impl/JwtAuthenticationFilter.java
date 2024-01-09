@@ -2,12 +2,14 @@ package com.abbas.securityservice.service.impl;
 
 import com.abbas.securityservice.entity.Token;
 import com.abbas.securityservice.repository.TokenRepository;
+import com.abbas.securityservice.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,18 +21,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
-@Component
+@Component("JwtAuthenticationFilter")
 @RequiredArgsConstructor
 @SuppressWarnings({"unused"})
 @Log4j2
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         log.debug("JwtAuthenticationFilter: doing Filter Internal");
 
@@ -43,15 +45,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        tokenId = this.jwtServiceImpl.extractId(jwt);
+        tokenId = this.jwtService.extractId(jwt);
+        //TODO: Check for Black List
         Optional<Token> possibilityToken = tokenRepository.findById(tokenId);
         if (possibilityToken.isPresent()) {
-            throw new RuntimeException();
+            throw new RuntimeException();//TODO: Create relative Exception
         }
-        userEmail = this.jwtServiceImpl.extractUsername(jwt);
+        userEmail = this.jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtServiceImpl.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );

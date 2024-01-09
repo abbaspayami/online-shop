@@ -13,6 +13,8 @@ redis:
   port: 6379
 inMemory:
   store: redis
+revocation:
+  timeInterval: 60000
 spring:
   sql:
     init:

@@ -3,6 +3,8 @@ package com.abbas.securityservice.service.impl;
 import com.abbas.securityservice.entity.UserHistory;
 import com.abbas.securityservice.repository.UserHistoryRepository;
 import com.abbas.securityservice.service.InMemoryStore;
+import com.abbas.securityservice.service.JwtService;
+import com.abbas.securityservice.service.StoreContextService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.Optional;
 @Log4j2
 public class RedisLogout implements LogoutHandler {
 
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtService jwtServiceImpl;
     private final UserHistoryRepository userHistoryRepository;
 
     @Override
@@ -44,7 +46,7 @@ public class RedisLogout implements LogoutHandler {
         userHistoryRepository.save(userHistory);
 
         InMemoryStore redisStore = new RedisStore();
-        StoreContextService redis = new StoreContextService(redisStore);
+        StoreContextService redis = new StoreContextServiceImpl(redisStore);
         redis.processStore(userHistory.getTokenId(), timeToExpiration);
 
     }

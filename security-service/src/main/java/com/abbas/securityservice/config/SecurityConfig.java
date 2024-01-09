@@ -1,46 +1,48 @@
 package com.abbas.securityservice.config;
 
+import com.abbas.securityservice.exception.NotFoundException;
 import com.abbas.securityservice.repository.UserHistoryRepository;
-import com.abbas.securityservice.repository.UserRepository;
+import com.abbas.securityservice.service.InMemoryStore;
+import com.abbas.securityservice.service.JwtService;
 import com.abbas.securityservice.service.impl.HashMapLogout;
-import com.abbas.securityservice.service.impl.JwtAuthenticationFilter;
-import com.abbas.securityservice.service.impl.JwtServiceImpl;
 import com.abbas.securityservice.service.impl.RedisLogout;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 @Log4j2
+@SuppressWarnings({"unused"})
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final OncePerRequestFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final UserRepository userRepository;
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtService jwtService;
     private final UserHistoryRepository userHistoryRepository;
+    private final InMemoryStore memoryStore;
 
-    @Value("${inMemory.store}")
+    public SecurityConfig(@Qualifier("JwtAuthenticationFilter") OncePerRequestFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, JwtService jwtService, UserHistoryRepository userHistoryRepository, InMemoryStore memoryStore) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.authenticationProvider = authenticationProvider;
+        this.jwtService = jwtService;
+        this.userHistoryRepository = userHistoryRepository;
+        this.memoryStore = memoryStore;
+    }
+
+    @Value("${inMemory.store:Map}")
     private String inMemoryStore;
 
 
@@ -64,38 +66,15 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        log.debug("SecurityConfig: user Details Service");
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(" User not found"));
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
     private LogoutHandler getInMemoryStore() {
         log.debug("SecurityConfig: getting InMemory Store");
         if (inMemoryStore.equalsIgnoreCase("Redis")) {
-            return new RedisLogout(jwtServiceImpl, userHistoryRepository);
-        } else {
-            return new HashMapLogout(jwtServiceImpl, userHistoryRepository);
+            return new RedisLogout(jwtService, userHistoryRepository);
+        } else if (inMemoryStore.equalsIgnoreCase("Map")) {
+            return new HashMapLogout(jwtService, userHistoryRepository, memoryStore);
+        }else{
+            throw new NotFoundException(ErrorMessageConstants.MEMORY_STORE_NOT_FOUND);
         }
     }
 
