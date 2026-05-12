@@ -1,3 +1,5 @@
+# DEPRECATED: This service has been replaced by Keycloak.
+# It is kept for reference only and should not be run alongside Keycloak.
 server:
   port: 8070
 eureka:
