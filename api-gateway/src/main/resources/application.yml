@@ -13,6 +13,9 @@ spring:
 
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: ${GATEWAY_CONNECT_TIMEOUT:3000}   # ms — time to establish TCP connection
+        response-timeout: ${GATEWAY_RESPONSE_TIMEOUT:10s}  # duration — time to receive response
       discovery:
         locator:
           enabled: true
